@@ -35,7 +35,7 @@ START = st.date_input("Choose Start Date", value=date(2016, 1, 1))
 # START = "2016-01-01"
 
 n_years = st.slider("Years of Prediction:", 1, 4)
-period = n_years * 365
+period_in_days = n_years * 365
 
 
 @st.cache
@@ -54,16 +54,16 @@ st.write(data.tail())
 
 
 def plot_data():
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=data["Date"],
-                  y=data["Open"], name="Stock Open"))
-    fig.add_trace(go.Scatter(x=data["Date"],
-                  y=data["Close"], name="Stock Close"))
-    fig.layout.update(title_text="Time Series Data",
-                      xaxis_rangeslider_visible=True)
-    st.plotly_chart(fig)
+    # fig = go.Figure()
+    # fig.add_trace(go.Scatter(x=data["Date"],
+    #               y=data["Open"], name="Stock Open"))
+    # fig.add_trace(go.Scatter(x=data["Date"],
+    #               y=data["Close"], name="Stock Close"))
+    # fig.layout.update(title_text="Time Series Data",
+    #                   xaxis_rangeslider_visible=True)
+    # st.plotly_chart(fig)
 
-    # st.line_chart(data_frame)
+    st.line_chart(data[['Open', 'Close']])
 
 
 plot_data()
@@ -78,7 +78,7 @@ df_train = df_train.rename(columns={"Date": "ds", "Close": "y"})
 
 model = Prophet()
 model.fit(df_train)
-future = model.make_future_dataframe(periods=period)
+future = model.make_future_dataframe(periods=period_in_days)
 forecast = model.predict(future)
 
 st.subheader("Forecasted Data & Graph")
